@@ -9,7 +9,7 @@
 
 | Phase | Description | Status | Progress |
 |---|---|---|---|
-| **Phase 0** | Environment Setup & Chemical ETL Prototype | In Progress | `[ 0 / 7 ]` |
+| **Phase 0** | Environment Setup & Chemical ETL Prototype | In Progress | `[ 4 / 7 ]` |
 | **Phase 1** | Correctness-First Scalar Core & Reference Suite | Planned | `[ 0 / 8 ]` |
 | **Phase 2** | Packed Binary Storage & Zero-Copy `mmap` | Planned | `[ 0 / 6 ]` |
 | **Phase 3** | Parallel Query Engine (Rayon Work-Stealing) | Planned | `[ 0 / 5 ]` |
@@ -27,19 +27,19 @@
 ## Phase 0: Environment Setup & Chemical ETL Prototype
 *Goal: Establish workspace architecture, acquire sample datasets, and build offline ingestion pipeline.*
 
-- [ ] **0.1 Workspace & Toolchain Initialization**
-  - [ ] Initialize Cargo workspace (`core`, `api`, `cli`, `benches`).
-  - [ ] Configure Python virtual environment with RDKit and NumPy.
-  - [ ] Establish standard `.gitignore`, CI workflow, and development dependencies.
+- [x] **0.1 Workspace & Toolchain Initialization**
+  - [x] Initialize Cargo workspace (`core`, `api`, `cli`, `benches`).
+  - [x] Configure Python virtual environment with RDKit and NumPy.
+  - [x] Establish standard `.gitignore`, CI workflow, and development dependencies.
 - [ ] **0.2 Dataset Acquisition**
   - [ ] Download ChEMBL / PubChem sample subsets (100k, 1M, and 10M compounds).
   - [ ] Store raw source files in `.data/raw/` (ignored in git).
-- [ ] **0.3 ETL Preprocessor Pipeline**
+- [x] **0.3 ETL Preprocessor Pipeline**
   - [ ] Implement molecular sanitizer and canonicalizer (`canonical_smiles`, `inchikey`).
   - [ ] Generate 2048-bit ECFP4 / Morgan fingerprints (radius = 2).
   - [ ] Calculate baseline physicochemical properties (MW, LogP, TPSA, HBD, HBA).
-  - [ ] Export data to binary packed test format (`fingerprints.bin`) and metadata database (`metadata.db`).
-  - [ ] Generate dataset `manifest.json` containing schema, fingerprint config, and record counts.
+  - [x] Export data to binary packed test format (`fingerprints.bin`) and metadata database (`metadata.db`).
+  - [x] Generate dataset `manifest.json` containing schema, fingerprint config, and record counts.
 
 ---
 

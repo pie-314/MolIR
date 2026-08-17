@@ -1,0 +1,15 @@
+[package]
+name = "molir-benches"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+molir-core.workspace = true
+criterion.workspace = true
+rand.workspace = true
+
+[[bench]]
+name = "simd_benchmarks"
+harness = false

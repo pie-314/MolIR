@@ -1,0 +1,19 @@
+{
+  "name": "molir-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MolIR Chemical Search Web Interface with Ketcher Integration",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ketcher-core": "^2.19.0",
+    "ketcher-react": "^2.19.0",
+    "ketcher-standalone": "^2.19.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
