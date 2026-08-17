@@ -118,7 +118,7 @@
   - [ ] Implement thread-local `CandidateBuffer` pooling to eliminate heap allocations per query.
   - [ ] Use `SmallVec` or fixed-capacity circular heaps for Top-K candidate collection.
 - [ ] **5.2 SIMD Threshold Pruning**
-  - [ ] Implement early exit pruning using upper-bound popcount bounds ($\text{Tanimoto}_{\max} = \frac{\text{popcount}(A)}{\text{popcount}(B)}$).
+  - [ ] Implement early exit pruning using upper-bound popcount bounds ($\text{Tanimoto}_{\max} = \frac{\operatorname{popcount}(A)}{\operatorname{popcount}(B)}$).
   - [ ] Skip vector evaluations for candidates whose precomputed popcount violates threshold bounds.
 - [ ] **5.3 End-to-End Search Profiling**
   - [ ] Profile L1/L2/L3 cache misses with `perf` / `valgrind --tool=cachegrind`.

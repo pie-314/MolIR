@@ -151,11 +151,11 @@ pub struct MolecularFingerprint {
 ### 4.2 Tanimoto (Jaccard) Similarity Metric
 For binary fingerprints $A$ and $B$:
 
-$$\text{Tanimoto}(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{\sum_{i=0}^{31} \text{popcount}(A[i] \ \& \ B[i])}{\sum_{i=0}^{31} \text{popcount}(A[i] \ | \ B[i])}$$
+$$\text{Tanimoto}(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{\sum_{i=0}^{31} \operatorname{popcount}(A[i] \land B[i])}{\sum_{i=0}^{31} \operatorname{popcount}(A[i] \lor B[i])}$$
 
-Since $|A \cup B| = \text{popcount}(A) + \text{popcount}(B) - |A \cap B|$, the precomputed population count $\text{popcount}(B)$ can be stored or calculated on the fly:
+Since $|A \cup B| = \operatorname{popcount}(A) + \operatorname{popcount}(B) - |A \cap B|$, the precomputed population count $\operatorname{popcount}(B)$ can be stored or calculated on the fly:
 
-$$\text{Tanimoto}(A, B) = \frac{|A \cap B|}{\text{popcount}(A) + \text{popcount}(B) - |A \cap B|}$$
+$$\text{Tanimoto}(A, B) = \frac{|A \cap B|}{\operatorname{popcount}(A) + \operatorname{popcount}(B) - |A \cap B|}$$
 
 ---
 
