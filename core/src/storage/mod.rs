@@ -4,13 +4,14 @@ use memmap2::Mmap;
 use serde::{Deserialize, Serialize};
 use crate::fingerprint::MolecularFingerprint;
 
-/// Cache-aligned binary record representing a single molecule in the index.
+/// Cache-aligned binary record representing a single molecule in the index (320 bytes = 5 x 64B cache lines).
 #[repr(C, align(64))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FingerprintRecord {
     pub cid: u32,
     pub popcount: u16,
-    pub _reserved: [u8; 10],
+    pub _reserved_tail: u16,
+    pub _reserved: [u64; 7],
     pub fingerprint: MolecularFingerprint,
 }
 
@@ -20,7 +21,8 @@ impl FingerprintRecord {
         Self {
             cid,
             popcount,
-            _reserved: [0u8; 10],
+            _reserved_tail: 0,
+            _reserved: [0u64; 7],
             fingerprint,
         }
     }
@@ -107,6 +109,6 @@ mod tests {
     #[test]
     fn test_record_size_and_alignment() {
         assert_eq!(std::mem::align_of::<FingerprintRecord>(), 64);
-        assert_eq!(std::mem::size_of::<FingerprintRecord>() % 64, 0);
+        assert_eq!(std::mem::size_of::<FingerprintRecord>(), 320);
     }
 }

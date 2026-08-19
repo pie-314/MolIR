@@ -55,7 +55,7 @@ yarn-error.log*
 pnpm-debug.log*
 .pnpm-debug.log*
 
-# Datasets & Large Binary Files (Keep out of VCS)
+# Datasets & Large Chemical Files (Stay in current project dir, kept out of Git)
 *.bin
 *.db
 *.sqlite
@@ -64,10 +64,32 @@ pnpm-debug.log*
 *.sdf.gz
 *.smi
 *.smiles
-.data/
+*.tsv
+*.csv
+*.parquet
+*.arrow
+*.gz
+*.tar.gz
+*.zip
+
+# Local Data Directories in Current Folder
 data/
+.data/
+raw/
 datasets/
 !datasets/README.md
+
+# LaTeX Build Artifacts
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
 
 # Logs & Temporary Files
 *.log

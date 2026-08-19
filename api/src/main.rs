@@ -45,6 +45,7 @@ struct SystemStatusResponse {
 
 #[derive(Deserialize)]
 struct SimilaritySearchRequest {
+    smiles: Option<String>,
     words: Option<[u64; 32]>,
     threshold: Option<f32>,
     top_k: Option<usize>,
@@ -52,9 +53,16 @@ struct SimilaritySearchRequest {
 
 #[derive(Serialize)]
 struct SimilaritySearchResponse {
+    query_smiles: Option<String>,
+    query_popcount: u32,
     total_scanned: usize,
     matched_count: usize,
     results: Vec<SearchHit>,
+}
+
+#[derive(Serialize)]
+struct ErrorResponse {
+    error: String,
 }
 
 #[tokio::main]
@@ -119,13 +127,28 @@ async fn system_status(State(state): State<Arc<AppState>>) -> Json<SystemStatusR
 async fn search_similarity(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<SimilaritySearchRequest>,
-) -> Json<SimilaritySearchResponse> {
-    let fp = if let Some(words) = payload.words {
+) -> Result<Json<SimilaritySearchResponse>, (StatusCode, Json<ErrorResponse>)> {
+    let fp = if let Some(ref smiles_str) = payload.smiles {
+        MolecularFingerprint::from_smiles(smiles_str).map_err(|err| {
+            (
+                StatusCode::BAD_REQUEST,
+                Json(ErrorResponse {
+                    error: format!("Invalid SMILES '{}': {}", smiles_str, err),
+                }),
+            )
+        })?
+    } else if let Some(words) = payload.words {
         MolecularFingerprint::from_words(words)
     } else {
-        MolecularFingerprint::zeros()
+        return Err((
+            StatusCode::BAD_REQUEST,
+            Json(ErrorResponse {
+                error: "Either 'smiles' or 'words' must be provided in request body.".to_string(),
+            }),
+        ));
     };
 
+    let query_popcount = fp.popcount();
     let threshold = payload.threshold.unwrap_or(0.7);
     let top_k = payload.top_k.unwrap_or(50);
     let query = SearchQuery::new(fp, threshold, top_k);
@@ -140,11 +163,13 @@ async fn search_similarity(
     let results = search_parallel(records, &query, 8192);
     let matched_count = results.len();
 
-    Json(SimilaritySearchResponse {
+    Ok(Json(SimilaritySearchResponse {
+        query_smiles: payload.smiles,
+        query_popcount,
         total_scanned,
         matched_count,
         results,
-    })
+    }))
 }
 
 async fn get_molecule_info(Path(cid): Path<u32>) -> impl IntoResponse {

@@ -1,3 +1,6 @@
+pub mod smiles;
+
+pub use smiles::{parse_smiles, MolecularGraph};
 use serde::{Deserialize, Serialize};
 
 /// Number of 64-bit words required to represent a 2048-bit fingerprint.
@@ -24,6 +27,12 @@ impl MolecularFingerprint {
     #[inline]
     pub const fn from_words(words: [u64; FINGERPRINT_WORDS]) -> Self {
         Self { words }
+    }
+
+    /// Parses a chemical SMILES string and computes its 2048-bit ECFP4 fingerprint.
+    pub fn from_smiles(smiles: &str) -> anyhow::Result<Self> {
+        let mut graph = parse_smiles(smiles)?;
+        Ok(graph.to_ecfp4())
     }
 
     /// Creates a fingerprint with all bits cleared (all zeroes).
@@ -149,5 +158,11 @@ mod tests {
 
         assert!((fp1.tanimoto(&fp2) - 1.0).abs() < 1e-6);
         assert!((fp1.tanimoto(&fp3) - 0.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_from_smiles_convenience() {
+        let fp = MolecularFingerprint::from_smiles("c1ccccc1").expect("Benzene parse");
+        assert!(fp.popcount() > 0);
     }
 }
